@@ -1,0 +1,118 @@
+---
+title: "Data607-wk3"
+author: "Joe Rovalino"
+date: "12/8/2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
+
+When you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r rawdata}
+raw.data <- "555-1239Moe Szyslak(636) 555-0113Burns, C. Montgomery555 -6542Rev. Timothy Lovejoy555 8904Ned Flanders636-555-3226Simpson, Homer5553642Dr. Julius Hibbert"
+raw.data
+```
+
+
+##Library
+```{r}
+library(stringr)
+library(tidyverse)
+```
+
+Problem #3
+Copy the introductory example. The vector name stores the extracted names. R> name [1] “Moe Szyslak” [4] “Ned Flanders” “Burns, C. Montgomery” “Rev. Timothy Lovejoy” “Simpson, Homer” “Dr. Julius Hibbert”
+
+a) Use the tools of this chapter to rearrange the vector so that all elements conform to the standard first_name last_name .
+
+b) Construct a logical vector indicating whether a character has a title (i.e., Rev. and Dr. ).
+
+c) Construct a logical vector indicating whether a character has a second name.
+
+## Problem 3
+
+```{r 3a}
+data <-"555-1239Moe Szyslak(636) 555-0113Burns, C. Montgomery555-6542Rev. Timothy Lovejoy555 8904Ned Flanders636-555-3226Simpson, Homer5553642Dr. Julius Hibbert"
+
+#remove phone numbers from raw data page 206 of textbook
+#names https://stackoverflow.com/questions/33826650/last-name-first-name-to-first-name-last-name
+
+clnnames <- unlist(str_extract_all(raw.data, "[[:alpha:]., ]{2,}"))
+#clnnames
+splitname <- str_split(clnnames, ", ", simplify = TRUE)
+#splitname
+firstlast <- str_c(splitname[,2]," ",splitname[,1])
+firstlast
+```
+
+```{r 3b}
+
+frntname<- str_detect(firstlast, "[[:alpha:]]{2,}\\.") 
+frntname
+```
+ 
+```{r 3c}
+
+middle <- str_detect(firstlast, "[A-Z]{1}\\.") 
+middle
+```
+ 
+## Problem 4
+
+ 4. Describe the types of strings that conform to the following regular expressions and construct an example that is matched by the regular expression 
+
+(a) [0-9]+ \\ $
+An expression that containt a number followed by a $
+```{r 4a}
+exp1 <- c("goog1e$", "google1$")
+ans4a <- str_detect(exp1, "[0-9]+\\$")
+ans4a
+```
+
+
+(b) \\ b[a-z]{1,4} \\ b
+an expression with an empty lowercase string then followed by alphas 1 through 4 characters in length and followed by expty string
+
+```{r}
+exp2 <- c(" tomz ", " Tomz ","John", "john","mik","drinkmilk", "Josi " )
+ans4b <- str_detect(exp2, "\\b[a-z]{1,4}\\b")
+ans4b
+```
+
+(c) .*? \\ .txt$
+an epxression that ends in .txt
+
+```{r}
+exp3 <- c("test .txt", "test.txt", "test.txta","test.xml", "test.json" ) 
+ans4c <- str_detect(exp3, ".*?\\.txt$")
+ans4c
+```
+
+(d) \\ d{2}/ \\ d{2}/ \\ d{4}
+An expresion that is date with 2 digit day and 2 digit month and 4 digit year. 
+
+```{r}
+exp4 <- c("31/12/2019", "12/31/2019","1/01/2019" ) 
+ans4d <- str_detect(exp4, "\\d{2}/\\d{2}/\\d{4}")
+ans4d
+```
+
+(e) <(.+?)>.+?</ \\ 1>
+This epxresssion is fro HTML tagging
+```{r}
+exp5 <- c("<br>HTML is fun</br>", "<br> Happy Holidays!<br>" ) 
+ans4e <- str_detect(exp5, "<(.+?)>.+?</\\1>")
+ans4e
+```
+
+
